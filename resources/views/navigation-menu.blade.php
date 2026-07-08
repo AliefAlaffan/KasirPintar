@@ -11,11 +11,25 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                @if(auth()->user()->isAdmin())    
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('admin.categories.index') }}" :active="request()->routeIs('admin.categories.*')">
+                            Kategori
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('admin.suppliers.index') }}" :active="request()->routeIs('admin.suppliers.*')">
+                            Supplier
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('admin.products.index') }}" :active="request()->routeIs('admin.products.*')">
+                            Produk
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
+                            Manajemen User
+                        </x-nav-link>
+                    </div>
+                  @endif
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">

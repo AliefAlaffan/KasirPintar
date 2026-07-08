@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Manajer\DashboardController as ManajerDashboard;
 use App\Http\Controllers\Kasir\DashboardController as KasirDashboard;
+use App\Http\Controllers\Admin\CategoryController; 
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -22,6 +26,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Grup khusus Admin
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+        Route::resource('categories', CategoryController::class)->except(['create', 'edit', 'show']);
+        Route::resource('suppliers', SupplierController::class)->except(['create', 'edit', 'show']);
+        Route::resource('products', ProductController::class)->except('show');
+        Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
+        Route::patch('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     });
 
     // Grup khusus Manajer
