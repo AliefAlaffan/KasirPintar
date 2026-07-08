@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Manajer\RestockController;
+use App\Http\Controllers\Manajer\StockOpnameController;
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -34,9 +37,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     });
 
-    // Grup khusus Manajer
     Route::middleware(['role:manajer'])->prefix('manajer')->name('manajer.')->group(function () {
         Route::get('/dashboard', [ManajerDashboard::class, 'index'])->name('dashboard');
+
+        Route::resource('restocks', RestockController::class)->only(['index', 'create', 'store', 'show']);
+        Route::resource('stock-opnames', StockOpnameController::class)->only(['index', 'create', 'store', 'show']);
+        Route::post('stock-opnames/{id}/complete', [StockOpnameController::class, 'complete'])->name('stock-opnames.complete');
     });
 
     // Grup khusus Kasir

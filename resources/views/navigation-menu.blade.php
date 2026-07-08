@@ -11,8 +11,8 @@
                 </div>
 
                 <!-- Navigation Links -->
-                @if(auth()->user()->isAdmin())    
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        @if(auth()->user()->isAdmin())    
                         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
@@ -28,8 +28,19 @@
                         <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
                             Manajemen User
                         </x-nav-link>
+                        @endif
+                        @if(auth()->user()->isManajer())
+                            <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                            <x-nav-link href="{{ route('manajer.restocks.index') }}" :active="request()->routeIs('manajer.restocks.*')">
+                                Restock
+                            </x-nav-link>
+                            <x-nav-link href="{{ route('manajer.stock-opnames.index') }}" :active="request()->routeIs('manajer.stock-opnames.*')">
+                                Stock Opname
+                            </x-nav-link>
+                        @endif
                     </div>
-                  @endif
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
