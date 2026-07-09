@@ -40,6 +40,11 @@
                                 Stock Opname
                             </x-nav-link>
                         @endif
+                        @if(auth()->user()->isAdmin() || auth()->user()->isManajer())
+                            <x-nav-link href="{{ route('reports.index') }}" :active="request()->routeIs('reports.*')">
+                                Laporan
+                            </x-nav-link>
+                        @endif
                         @if(auth()->user()->isKasir())
                             <x-nav-link href="{{ route('kasir.dashboard') }}" :active="request()->routeIs('kasir.dashboard')">
                                 Kasir

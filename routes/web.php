@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Manajer\RestockController;
 use App\Http\Controllers\Manajer\StockOpnameController;
 use App\Http\Controllers\Kasir\TransactionController;
+use App\Http\Controllers\Admin\ReportController;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -49,5 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:kasir'])->prefix('kasir')->name('kasir.')->group(function () {
         Route::get('/dashboard', [KasirDashboard::class, 'index'])->name('dashboard');
         Route::get('/transactions/{id}/receipt', [TransactionController::class, 'receipt'])->name('transactions.receipt');
+    });
+
+    Route::middleware(['role:admin,manajer'])->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
     });
 });
