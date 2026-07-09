@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Manajer\RestockController;
 use App\Http\Controllers\Manajer\StockOpnameController;
+use App\Http\Controllers\Kasir\TransactionController;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -45,8 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('stock-opnames/{id}/complete', [StockOpnameController::class, 'complete'])->name('stock-opnames.complete');
     });
 
-    // Grup khusus Kasir
     Route::middleware(['role:kasir'])->prefix('kasir')->name('kasir.')->group(function () {
         Route::get('/dashboard', [KasirDashboard::class, 'index'])->name('dashboard');
+        Route::get('/transactions/{id}/receipt', [TransactionController::class, 'receipt'])->name('transactions.receipt');
     });
 });

@@ -40,6 +40,11 @@
                                 Stock Opname
                             </x-nav-link>
                         @endif
+                        @if(auth()->user()->isKasir())
+                            <x-nav-link href="{{ route('kasir.dashboard') }}" :active="request()->routeIs('kasir.dashboard')">
+                                Kasir
+                            </x-nav-link>
+                        @endif
                     </div>
             </div>
 
