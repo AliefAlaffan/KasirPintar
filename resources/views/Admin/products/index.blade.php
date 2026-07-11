@@ -61,11 +61,9 @@
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <a href="{{ route('admin.products.edit', $product->id) }}" class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Hapus produk ini?')">
-                                        @csrf @method('DELETE')
-                                        <button class="text-red-600 hover:underline">Hapus</button>
-                                    </form>
+                                    <x-confirm-delete-button
+                                        :action="route('admin.products.destroy', $product->id)"
+                                        :confirm-text="'Hapus produk &quot;'.$product->name.'&quot;? Tindakan ini tidak bisa dibatalkan.'" />
                                 </td>
                             </tr>
                         @empty

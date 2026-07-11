@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ isset($title) ? $title . ' - KasirPintar' : 'KasirPintar' }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,6 +17,13 @@
 
         <!-- Styles -->
         @livewireStyles
+        <style>
+            #page-loader {
+                position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+                background: linear-gradient(90deg, #3b82f6, #60a5fa);
+                z-index: 100; transition: width 0.3s ease;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <x-banner />
@@ -42,5 +49,22 @@
         @stack('modals')
 
         @livewireScripts
+        <x-toast />
+        <div id="page-loader"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const loader = document.getElementById('page-loader');
+                document.querySelectorAll('a[href]:not([target="_blank"])').forEach(link => {
+                    link.addEventListener('click', () => {
+                        loader.style.width = '80%';
+                    });
+                });
+                document.querySelectorAll('form').forEach(form => {
+                    form.addEventListener('submit', () => {
+                        loader.style.width = '80%';
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

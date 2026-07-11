@@ -41,11 +41,9 @@
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <button data-modal-target="edit-{{ $category->id }}" data-modal-toggle="edit-{{ $category->id }}"
                                             class="text-blue-600 hover:underline">Edit</button>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Hapus kategori ini?')">
-                                        @csrf @method('DELETE')
-                                        <button class="text-red-600 hover:underline">Hapus</button>
-                                    </form>
+                                    <x-confirm-delete-button
+                                        :action="route('admin.categories.destroy', $category->id)"
+                                        :confirm-text="'Hapus kategori &quot;'.$category->name.'&quot;? Tindakan ini tidak bisa dibatalkan.'" />
                                 </td>
                             </tr>
 
@@ -66,7 +64,11 @@
                                 </div>
                             </div>
                         @empty
-                            <tr><td colspan="3" class="px-4 py-6 text-center text-gray-400">Belum ada kategori.</td></tr>
+                            <tr>
+    <td colspan="6" class="px-0">
+        <x-empty-state title="Belum ada produk" description="Klik 'Tambah Produk' untuk mulai menambahkan data." />
+    </td>
+</tr>
                         @endforelse
                     </tbody>
                 </table>

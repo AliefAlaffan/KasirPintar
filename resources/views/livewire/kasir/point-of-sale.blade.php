@@ -1,5 +1,20 @@
 <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
+    <div class="flex justify-between items-center mb-4 bg-white rounded-xl shadow px-4 py-3">
+        <div>
+            <p class="text-sm text-gray-500">Kasir bertugas</p>
+            <p class="font-semibold text-gray-800">{{ auth()->user()->name }}</p>
+        </div>
+        <div x-data="{ time: '' }" x-init="
+            setInterval(() => {
+                time = new Date().toLocaleTimeString('id-ID');
+            }, 1000)
+        " class="text-right">
+            <p class="text-sm text-gray-500">Waktu Sekarang</p>
+            <p class="font-mono font-semibold text-gray-800" x-text="time"></p>
+        </div>
+    </div>
+
     {{-- KOLOM KIRI: Pencarian & Grid Produk --}}
     <div class="lg:col-span-3 space-y-4">
 
