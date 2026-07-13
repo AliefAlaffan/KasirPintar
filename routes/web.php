@@ -14,6 +14,11 @@ use App\Http\Controllers\Kasir\TransactionController;
 use App\Http\Controllers\Admin\ReportController;
 
 
+route::get('/', function () {
+    return redirect()->route('login');
+});
+
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Redirect otomatis setelah login sesuai role
