@@ -37,15 +37,23 @@ class UserController extends Controller
         return back()->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function update(Request $request, int $id)
+   public function update(Request $request, int $id)
     {
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role'  => 'required|in:admin,manajer,kasir',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'role'     => 'required|in:admin,manajer,kasir',
+            'password' => 'nullable|string|min:8',
         ]);
+
+        // Password hanya diupdate kalau field-nya diisi, kalau kosong biarkan password lama
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
 
         $user->update($validated);
 
