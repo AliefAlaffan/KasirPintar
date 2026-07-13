@@ -1,4 +1,4 @@
-<x-admin-layout title="Dashboard">
+<x-dashboard-layout title="Dashboard">
 
     {{-- ============ HERO GREETING + QUICK ACTIONS ============ --}}
     <div class="relative overflow-hidden rounded-2xl bg-brand-gradient p-6 sm:p-8 mb-6">
@@ -277,4 +277,4 @@
             }
         });
     </script>
-</x-admin-layout>
+</x-dashboard-layout>

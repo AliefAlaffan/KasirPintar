@@ -1,4 +1,4 @@
-<x-admin-layout title="Tambah Produk">
+<x-dashboard-layout title="Tambah Produk">
 
     <div class="max-w-3xl">
         <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 mb-4 transition">
@@ -106,4 +106,4 @@
             </form>
         </div>
     </div>
-</x-admin-layout>
+</x-dashboard-layout>

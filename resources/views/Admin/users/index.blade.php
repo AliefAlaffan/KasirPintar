@@ -1,4 +1,4 @@
-<x-admin-layout title="Manajemen User">
+<x-dashboard-layout title="Manajemen User">
 
     <div x-data="{ showAddModal: false }">
 
@@ -293,4 +293,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-dashboard-layout>

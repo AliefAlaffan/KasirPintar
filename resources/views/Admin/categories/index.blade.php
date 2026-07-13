@@ -1,4 +1,4 @@
-<x-admin-layout title="Kelola Kategori">
+<x-dashboard-layout title="Kelola Kategori">
 
     <div x-data="{ showAddModal: false, editingId: null, deletingId: null, deletingName: '' }">
 
@@ -202,4 +202,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-dashboard-layout>

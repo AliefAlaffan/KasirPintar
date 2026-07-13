@@ -1,4 +1,4 @@
-<x-admin-layout title="Kelola Supplier">
+<x-dashboard-layout title="Kelola Supplier">
 
     <div x-data="{ showAddModal: false, editingId: null, deletingId: null }">
 
@@ -294,4 +294,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-dashboard-layout>

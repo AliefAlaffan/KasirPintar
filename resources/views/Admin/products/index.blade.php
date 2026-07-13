@@ -1,4 +1,4 @@
-<x-admin-layout title="Kelola Produk">
+<x-dashboard-layout title="Kelola Produk">
 
     {{-- ============ HEADER ============ --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -188,4 +188,4 @@
             </a>
         </div>
     @endif
-</x-admin-layout>
+</x-dashboard-layout>
