@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-kasir-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Kasir — Point of Sale</h2>
     </x-slot>
@@ -8,4 +8,4 @@
             @livewire('kasir.point-of-sale')
         </div>
     </div>
-</x-app-layout>
+</x-kasir-layout>

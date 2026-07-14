@@ -13,13 +13,14 @@ class PointOfSale extends Component
     public ?int $categoryFilter = null;
     public array $cart = [];
 
-    public float $discount = 0;
+    public $discount = 0;
     public string $paymentMethod = 'cash';
-    public float $paidAmount = 0;
+    public $paidAmount = 0;
 
     public ?string $errorMessage = null;
     public ?string $successMessage = null;
     public ?int $lastTransactionId = null;
+    public array $lastReceipt = [];
 
     protected TransactionService $transactionService;
 
@@ -48,7 +49,6 @@ class PointOfSale extends Component
         return Category::orderBy('name')->get();
     }
 
-    // Dipanggil saat kasir scan barcode / ketik SKU lalu tekan Enter
     public function scanBarcode(): void
     {
         $this->errorMessage = null;
@@ -124,12 +124,47 @@ class PointOfSale extends Component
 
     public function getTotalProperty(): float
     {
-        return max(0, $this->subtotal - $this->discount);
+        $discount = is_numeric($this->discount) ? (float) $this->discount : 0;
+        return max(0, $this->subtotal - $discount);
     }
 
     public function getChangeProperty(): float
     {
-        return max(0, $this->paidAmount - $this->total);
+        $paidAmount = is_numeric($this->paidAmount) ? (float) $this->paidAmount : 0;
+        return max(0, $paidAmount - $this->total);
+    }
+
+    public function getQuickAmountsProperty(): array
+    {
+        $total = $this->total;
+        $denominations = [5000, 10000, 20000, 50000, 100000, 150000, 200000, 500000];
+
+        return collect($denominations)
+            ->filter(fn ($d) => $d > $total)
+            ->take(3)
+            ->values()
+            ->toArray();
+    }
+
+    public function setQuickAmount(int $amount): void
+    {
+        $this->paidAmount = $amount;
+    }
+
+    public function setExactAmount(): void
+    {
+        $this->paidAmount = $this->total;
+    }
+
+    // Dipanggil otomatis oleh Livewire setiap kali $paymentMethod berubah
+    public function updatedPaymentMethod(string $value): void
+    {
+        // QRIS & Debit selalu dibayar pas (tidak ada uang kembalian secara fisik)
+        if (in_array($value, ['qris', 'debit'])) {
+            $this->paidAmount = $this->total;
+        } else {
+            $this->paidAmount = 0;
+        }
     }
 
     public function checkout(): void
@@ -141,7 +176,10 @@ class PointOfSale extends Component
             return;
         }
 
-        if ($this->paidAmount < $this->total) {
+        $discount = is_numeric($this->discount) ? (float) $this->discount : 0;
+        $paidAmount = is_numeric($this->paidAmount) ? (float) $this->paidAmount : 0;
+
+        if ($paidAmount < $this->total) {
             $this->errorMessage = 'Jumlah bayar kurang dari total belanja.';
             return;
         }
@@ -149,15 +187,27 @@ class PointOfSale extends Component
         try {
             $transaction = $this->transactionService->checkout(
                 $this->cart,
-                $this->discount,
+                $discount,
                 $this->paymentMethod,
-                $this->paidAmount
+                $paidAmount
             );
+
+            // Simpan snapshot transaksi untuk ditampilkan di modal, SEBELUM cart direset
+            $this->lastReceipt = [
+                'invoice_number' => $transaction->invoice_number,
+                'items'          => array_values($this->cart),
+                'subtotal'       => $this->subtotal,
+                'discount'       => $discount,
+                'total'          => $this->total,
+                'paid_amount'    => $paidAmount,
+                'change_amount'  => max(0, $paidAmount - $this->total),
+                'payment_method' => $this->paymentMethod,
+                'created_at'     => now()->format('d M Y, H:i'),
+            ];
 
             $this->lastTransactionId = $transaction->id;
             $this->successMessage = "Transaksi {$transaction->invoice_number} berhasil!";
 
-            // Reset keranjang untuk transaksi berikutnya
             $this->cart = [];
             $this->discount = 0;
             $this->paidAmount = 0;
@@ -167,6 +217,13 @@ class PointOfSale extends Component
         }
     }
 
+    public function closeReceipt(): void
+    {
+        $this->lastTransactionId = null;
+        $this->successMessage = null;
+        $this->lastReceipt = [];
+    }
+
     public function render()
     {
         return view('livewire.kasir.point-of-sale', [
@@ -174,4 +231,4 @@ class PointOfSale extends Component
             'categories' => $this->categories,
         ]);
     }
-}   
+}
