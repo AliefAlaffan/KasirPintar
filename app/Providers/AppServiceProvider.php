@@ -13,6 +13,8 @@ use App\Repositories\Contracts\RestockRepositoryInterface;
 use App\Repositories\RestockRepository;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
 use App\Repositories\TransactionRepository;
+use App\Repositories\Contracts\StockOpnameRepositoryInterface;
+use App\Repositories\StockOpnameRepository;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(RestockRepositoryInterface::class, RestockRepository::class);
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
+        $this->app->bind(StockOpnameRepositoryInterface::class, StockOpnameRepository::class);
     }
 
     public function boot(): void
