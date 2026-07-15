@@ -61,6 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/cash-closure', [CashClosureController::class, 'store'])->name('cash-closure.store');
         Route::get('/cash-closure/history', [CashClosureController::class, 'history'])->name('cash-closure.history');
         Route::get('/cash-closure/{id}', [CashClosureController::class, 'show'])->name('cash-closure.show');
+
+        Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+        Route::post('/transactions/{id}/void', [TransactionController::class, 'void'])->name('transactions.void');
     });
 
     Route::middleware(['role:admin,manajer'])->prefix('reports')->name('reports.')->group(function () {

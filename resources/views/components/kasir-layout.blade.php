@@ -47,6 +47,14 @@
             </div>
 
             <div class="ms-auto flex items-center gap-4">
+                <a href="{{ route('kasir.transactions.history') }}"
+                   class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm hover:bg-white/20 transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h0a2 2 0 012 2v6m-4 0h4m-4 0H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4 0v3m0 0h2m-2 0H10" />
+                    </svg>
+                    Riwayat
+                </a>
+
                 <a href="{{ route('kasir.cash-closure.create') }}"
                    class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm hover:bg-white/20 transition">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

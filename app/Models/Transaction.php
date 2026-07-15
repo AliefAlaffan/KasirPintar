@@ -11,6 +11,12 @@ class Transaction extends Model
     protected $fillable = [
         'invoice_number', 'user_id', 'subtotal', 'discount',
         'tax', 'total', 'paid_amount', 'change_amount', 'payment_method',
+        'is_voided', 'void_reason', 'voided_at',
+    ];
+
+    protected $casts = [
+        'is_voided' => 'boolean',
+        'voided_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

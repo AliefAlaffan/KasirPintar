@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use App\Models\CashClosure;
+use App\Models\Transaction;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class TransactionService
@@ -52,5 +55,55 @@ class TransactionService
     public function find(int $id)
     {
         return $this->repository->find($id);
+    }
+
+    public function history(int $userId, int $perPage = 15)
+    {
+        return Transaction::where('user_id', $userId)
+            ->latest()
+            ->paginate($perPage);
+    }
+
+    public function voidTransaction(int $transactionId, int $userId, string $reason): void
+    {
+        $transaction = Transaction::with('details')->findOrFail($transactionId);
+
+        if ($transaction->user_id !== $userId) {
+            throw new \Exception('Anda tidak bisa membatalkan transaksi milik kasir lain.');
+        }
+
+        if ($transaction->is_voided) {
+            throw new \Exception('Transaksi ini sudah dibatalkan sebelumnya.');
+        }
+
+        // Cegah void transaksi yang sudah masuk periode tutup kasir yang selesai,
+        // supaya rekonsiliasi kas yang sudah tersimpan tidak jadi tidak akurat
+        $alreadyClosed = CashClosure::where('user_id', $userId)
+            ->where('period_end', '>=', $transaction->created_at)
+            ->exists();
+
+        if ($alreadyClosed) {
+            throw new \Exception('Transaksi ini sudah masuk periode tutup kasir yang selesai, tidak bisa dibatalkan lagi.');
+        }
+
+        DB::transaction(function () use ($transaction, $reason) {
+            foreach ($transaction->details as $detail) {
+                if ($detail->product) {
+                    $detail->product->increment('stock', $detail->quantity);
+                }
+            }
+
+            $transaction->update([
+                'is_voided'   => true,
+                'void_reason' => $reason,
+                'voided_at'   => now(),
+            ]);
+
+            ActivityLog::create([
+                'user_id'     => $transaction->user_id,
+                'action'      => 'Membatalkan transaksi',
+                'description' => "Invoice {$transaction->invoice_number} dibatalkan. Alasan: {$reason}",
+            ]);
+        });
     }
 }
