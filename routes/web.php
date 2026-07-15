@@ -12,6 +12,7 @@ use App\Http\Controllers\Manajer\RestockController;
 use App\Http\Controllers\Manajer\StockOpnameController;
 use App\Http\Controllers\Kasir\TransactionController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Kasir\CashClosureController;
 
 
 route::get('/', function () {
@@ -55,6 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:kasir'])->prefix('kasir')->name('kasir.')->group(function () {
         Route::get('/dashboard', [KasirDashboard::class, 'index'])->name('dashboard');
         Route::get('/transactions/{id}/receipt', [TransactionController::class, 'receipt'])->name('transactions.receipt');
+
+        Route::get('/cash-closure', [CashClosureController::class, 'create'])->name('cash-closure.create');
+        Route::post('/cash-closure', [CashClosureController::class, 'store'])->name('cash-closure.store');
+        Route::get('/cash-closure/history', [CashClosureController::class, 'history'])->name('cash-closure.history');
+        Route::get('/cash-closure/{id}', [CashClosureController::class, 'show'])->name('cash-closure.show');
     });
 
     Route::middleware(['role:admin,manajer'])->prefix('reports')->name('reports.')->group(function () {

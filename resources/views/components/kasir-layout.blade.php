@@ -47,6 +47,14 @@
             </div>
 
             <div class="ms-auto flex items-center gap-4">
+                <a href="{{ route('kasir.cash-closure.create') }}"
+                   class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm hover:bg-white/20 transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 14h.01M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Tutup Kasir
+                </a>
+
                 <div class="text-right hidden sm:block" x-data="{ time: '' }" x-init="setInterval(() => time = new Date().toLocaleTimeString('id-ID'), 1000)">
                     <p class="text-xs text-slate-400 leading-none">Waktu</p>
                     <p class="text-sm font-mono font-medium text-white leading-tight" x-text="time"></p>
