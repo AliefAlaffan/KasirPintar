@@ -74,6 +74,15 @@
                     @if (auth()->user()->isAdmin())
                         <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-5">Master Data</p>
 
+                        <a href="{{ route('admin.products.index') }}"
+                           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                           {{ request()->routeIs('admin.products.*') ? 'bg-white text-[#1e1b3a] shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                            <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                            </svg>
+                            Produk
+                        </a>
+
                         <a href="{{ route('admin.categories.index') }}"
                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
                            {{ request()->routeIs('admin.categories.*') ? 'bg-white text-[#1e1b3a] shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -90,15 +99,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                             Supplier
-                        </a>
-
-                        <a href="{{ route('admin.products.index') }}"
-                           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                           {{ request()->routeIs('admin.products.*') ? 'bg-white text-[#1e1b3a] shadow-sm' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                            <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                            </svg>
-                            Produk
                         </a>
 
                         <a href="{{ route('admin.users.index') }}"
@@ -190,10 +190,16 @@
                     </button>
                     <h1 class="font-display font-bold text-slate-800 text-lg leading-tight">{{ $title ?? 'Dashboard' }}</h1>
                     <div class="ms-auto flex items-center gap-3">
-                        <span class="hidden sm:block text-xs text-slate-400 font-mono" x-data="{ time: '' }"
-                              x-init="time = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })">
-                            <span x-text="time"></span>
-                        </span>
+                        <div class="hidden sm:block text-right"
+                             x-data="{ date: '', time: '' }"
+                             x-init="
+                                date = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                time = new Date().toLocaleTimeString('id-ID');
+                                setInterval(() => { time = new Date().toLocaleTimeString('id-ID'); }, 1000);
+                             ">
+                            <p class="text-xs text-slate-400 font-medium leading-tight" x-text="date"></p>
+                            <p class="text-xs font-mono font-semibold text-slate-600 leading-tight" x-text="time"></p>
+                        </div>
                     </div>
                 </header>
 

@@ -11,7 +11,6 @@
                    x-init="const h = new Date().getHours(); greeting = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam'"
                    x-text="greeting + ', {{ explode(' ', auth()->user()->name)[0] }}'"></p>
                 <h2 class="font-display font-bold text-white text-2xl sm:text-3xl mt-1">Begini performa toko Anda hari ini</h2>
-                <p class="text-white/60 text-sm mt-2">Terakhir diperbarui: <span x-data x-init="setInterval(() => $el.innerText = new Date().toLocaleTimeString('id-ID'), 1000)"></span></p>
             </div>
 
             <div class="flex flex-wrap gap-2 shrink-0">
