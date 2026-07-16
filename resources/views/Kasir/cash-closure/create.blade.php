@@ -1,4 +1,4 @@
-<x-kasir-layout title="Tutup Kasir">
+<x-kasir-layout title="Laporan Kas">
 
     <div class="max-w-2xl mx-auto" x-data="{ physicalCash: '', get diff() { return (parseFloat(this.physicalCash) || 0) - {{ $summary['system_cash_total'] }}; } }">
 
@@ -12,10 +12,11 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
             <div class="bg-brand-gradient p-6 sm:p-8">
-                <h2 class="font-display font-bold text-white text-xl">Tutup Kasir</h2>
+                <h2 class="font-display font-bold text-white text-xl">Laporan Kas</h2>
                 <p class="text-white/70 text-sm mt-1">
                     Periode: {{ $summary['period_start']->format('d M Y, H:i') }} — {{ $summary['period_end']->format('d M Y, H:i') }}
                 </p>
+                <p class="text-white/60 text-xs mt-2">Ini hanya laporan ringkasan — Anda tetap bisa bertransaksi seperti biasa setelah ini disimpan.</p>
             </div>
 
             <div class="p-6 sm:p-8">
@@ -78,7 +79,7 @@
 
                     <button type="submit"
                             class="w-full py-3.5 bg-brand-gradient text-white font-semibold text-sm rounded-xl hover:shadow-lg transition">
-                        Konfirmasi Tutup Kasir
+                        Simpan Laporan Kas
                     </button>
                 </form>
             </div>

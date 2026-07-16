@@ -92,4 +92,27 @@ class ReportService
             ->orderByDesc('total_revenue')
             ->get();
     }
+
+    public function getVoidedTransactions(string $from, string $to)
+    {
+        $from = \Carbon\Carbon::parse($from)->startOfDay();
+        $to = \Carbon\Carbon::parse($to)->endOfDay();
+
+        return \App\Models\Transaction::with('user')
+            ->where('is_voided', true)
+            ->whereBetween('voided_at', [$from, $to])
+            ->latest('voided_at')
+            ->get();
+    }
+
+    public function getCashClosures(string $from, string $to)
+    {
+        $from = \Carbon\Carbon::parse($from)->startOfDay();
+        $to = \Carbon\Carbon::parse($to)->endOfDay();
+
+        return \App\Models\CashClosure::with('user')
+            ->whereBetween('period_end', [$from, $to])
+            ->latest('period_end')
+            ->get();
+    }
 }

@@ -76,16 +76,6 @@ class TransactionService
             throw new \Exception('Transaksi ini sudah dibatalkan sebelumnya.');
         }
 
-        // Cegah void transaksi yang sudah masuk periode tutup kasir yang selesai,
-        // supaya rekonsiliasi kas yang sudah tersimpan tidak jadi tidak akurat
-        $alreadyClosed = CashClosure::where('user_id', $userId)
-            ->where('period_end', '>=', $transaction->created_at)
-            ->exists();
-
-        if ($alreadyClosed) {
-            throw new \Exception('Transaksi ini sudah masuk periode tutup kasir yang selesai, tidak bisa dibatalkan lagi.');
-        }
-
         DB::transaction(function () use ($transaction, $reason) {
             foreach ($transaction->details as $detail) {
                 if ($detail->product) {

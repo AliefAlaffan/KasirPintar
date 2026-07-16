@@ -68,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['role:admin,manajer'])->prefix('reports')->name('reports.')->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/products', [ReportController::class, 'products'])->name('products');
+        Route::get('/cashiers', [ReportController::class, 'cashiers'])->name('cashiers');
+        Route::get('/transactions', [ReportController::class, 'transactions'])->name('transactions');
+        Route::get('/voided', [ReportController::class, 'voided'])->name('voided');
+        Route::get('/cash-closures', [ReportController::class, 'cashClosures'])->name('cash-closures');
+    
         Route::get('/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
         Route::get('/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
     });
