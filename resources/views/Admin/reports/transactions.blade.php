@@ -1,13 +1,39 @@
 <x-dashboard-layout title="Detail Transaksi">
 
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-start gap-3 mb-6">
+        <a href="{{ route('reports.index') }}"
+           class="mt-1 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition shrink-0">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
         <div>
-            <h2 class="font-display font-bold text-xl text-slate-800">Detail Transaksi</h2>
-            <p class="text-sm text-slate-400 mt-0.5">{{ \Carbon\Carbon::parse($from)->format('d M Y') }} — {{ \Carbon\Carbon::parse($to)->format('d M Y') }}</p>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Laporan</p>
+            <h2 class="font-display font-bold text-2xl text-slate-800">Detail Transaksi</h2>
         </div>
     </div>
 
-    <x-report-tabs active="transactions" :from="$from" :to="$to" />
+    <x-report-filter-bar :from="$from" :to="$to" export-type="transactions" />
+
+    @php
+        $totalValid = $transactions->where('is_voided', false)->count();
+        $totalVoid = $transactions->where('is_voided', true)->count();
+    @endphp
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Transaksi</p>
+            <p class="text-xl font-display font-bold text-slate-800 mt-1">{{ count($transactions) }}</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Berhasil</p>
+            <p class="text-xl font-display font-bold text-emerald-600 mt-1">{{ $totalValid }}</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Dibatalkan (Void)</p>
+            <p class="text-xl font-display font-bold text-rose-600 mt-1">{{ $totalVoid }}</p>
+        </div>
+    </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">

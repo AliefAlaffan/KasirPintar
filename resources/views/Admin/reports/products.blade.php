@@ -1,39 +1,71 @@
 <x-dashboard-layout title="Produk Terlaris">
 
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-start gap-3 mb-6">
+        <a href="{{ route('reports.index') }}"
+           class="mt-1 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition shrink-0">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
         <div>
-            <h2 class="font-display font-bold text-xl text-slate-800">Produk Terlaris</h2>
-            <p class="text-sm text-slate-400 mt-0.5">{{ \Carbon\Carbon::parse($from)->format('d M Y') }} — {{ \Carbon\Carbon::parse($to)->format('d M Y') }}</p>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Laporan</p>
+            <h2 class="font-display font-bold text-2xl text-slate-800">Produk Terlaris</h2>
         </div>
     </div>
 
-    <x-report-tabs active="products" :from="$from" :to="$to" />
+    <x-report-filter-bar :from="$from" :to="$to" export-type="products" />
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <div class="space-y-4">
-            @forelse ($bestSelling as $index => $item)
-                @php
-                    $maxSold = $bestSelling->max('total_sold') ?: 1;
-                    $ratio = ($item->total_sold / $maxSold) * 100;
-                    $rankColors = ['bg-amber-400', 'bg-slate-300', 'bg-amber-700'];
-                @endphp
-                <div class="flex items-center gap-3">
-                    <span class="w-7 h-7 rounded-full {{ $rankColors[$index] ?? 'bg-slate-100' }} {{ $index < 3 ? 'text-white' : 'text-slate-500' }} text-xs font-bold flex items-center justify-center shrink-0">
-                        {{ $index + 1 }}
-                    </span>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-center mb-1">
-                            <p class="text-sm font-medium text-slate-700 truncate pr-2">{{ $item->name }}</p>
-                            <span class="text-xs font-semibold text-slate-500 shrink-0">{{ $item->total_sold }} terjual · Rp {{ number_format($item->total_revenue, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-brand-gradient rounded-full transition-all duration-700" style="width: {{ $ratio }}%"></div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p class="text-sm text-slate-400 text-center py-8">Belum ada data penjualan di periode ini.</p>
-            @endforelse
+    @php
+        $totalUnitTerjual = $bestSelling->sum('total_sold');
+        $totalPendapatan = $bestSelling->sum('total_revenue');
+    @endphp
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Produk Terjual</p>
+            <p class="text-xl font-display font-bold text-slate-800 mt-1">{{ count($bestSelling) }} produk</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Unit Terjual</p>
+            <p class="text-xl font-display font-bold text-slate-800 mt-1">{{ number_format($totalUnitTerjual) }}</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Pendapatan</p>
+            <p class="text-xl font-display font-bold text-slate-800 mt-1">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead>
+                    <tr class="border-b border-slate-100">
+                        <th class="px-6 py-3 font-medium text-slate-400 text-xs uppercase tracking-wider">Peringkat</th>
+                        <th class="px-6 py-3 font-medium text-slate-400 text-xs uppercase tracking-wider">Produk</th>
+                        <th class="px-6 py-3 font-medium text-slate-400 text-xs uppercase tracking-wider">SKU</th>
+                        <th class="px-6 py-3 font-medium text-slate-400 text-xs uppercase tracking-wider">Terjual</th>
+                        <th class="px-6 py-3 font-medium text-slate-400 text-xs uppercase tracking-wider">Pendapatan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse ($bestSelling as $index => $item)
+                        @php $rankColors = ['bg-amber-400 text-white', 'bg-slate-300 text-white', 'bg-amber-700 text-white']; @endphp
+                        <tr class="hover:bg-slate-50/60 transition">
+                            <td class="px-6 py-3.5">
+                                <span class="w-6 h-6 rounded-full {{ $rankColors[$index] ?? 'bg-slate-100 text-slate-500' }} text-xs font-bold flex items-center justify-center">
+                                    {{ $index + 1 }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-3.5 font-medium text-slate-700">{{ $item->name }}</td>
+                            <td class="px-6 py-3.5 font-mono text-xs text-slate-500">{{ $item->sku }}</td>
+                            <td class="px-6 py-3.5 text-slate-600">{{ $item->total_sold }}</td>
+                            <td class="px-6 py-3.5 font-medium text-slate-800">Rp {{ number_format($item->total_revenue, 0, ',', '.') }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">Belum ada data penjualan di periode ini.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </x-dashboard-layout>
