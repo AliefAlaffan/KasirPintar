@@ -13,6 +13,7 @@ use App\Http\Controllers\Manajer\StockOpnameController;
 use App\Http\Controllers\Kasir\TransactionController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Kasir\CashClosureController;
+use App\Http\Controllers\Admin\StoreSettingController;
 
 
 route::get('/', function () {
@@ -43,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('products', ProductController::class)->except('show');
         Route::resource('users', UserController::class)->except(['create', 'edit', 'show']);
         Route::patch('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+        Route::get('/settings', [StoreSettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [StoreSettingController::class, 'update'])->name('settings.update');
     });
 
     Route::middleware(['role:manajer'])->prefix('manajer')->name('manajer.')->group(function () {
